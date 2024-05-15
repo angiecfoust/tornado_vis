@@ -1,9 +1,11 @@
-const url = 'https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/tornadoAlley.geojson'
+const url = 'https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/merged_tornado_data.geojson'
 
 
 // Function to create the map
 function createMap(tornado) {
     d3.json(url).then((data) => {
+
+        console.log(data);
 
         // Add the map view tile
         let view = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
