@@ -14,7 +14,7 @@ let night = L.tileLayer(
 );
 
 let url =
-  "https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/merged_tornado_data_geojson";
+  "https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/static/final_data.geojson";
 
 let tornadoAlley =
   "https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/tornadoAlley.geojson";
