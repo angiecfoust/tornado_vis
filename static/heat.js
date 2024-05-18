@@ -14,9 +14,11 @@ let night = L.tileLayer(
 );
 
 let url =
-  "https://raw.githubusercontent.com/brupps/project_3/main/static/data.geojson";
+  "https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/merged_tornado_data_geojson";
+
 let tornadoAlley =
-  "https://raw.githubusercontent.com/brupps/project_3/main/static/tornadoAlley.geojson";
+  "https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/tornadoAlley.geojson";
+
 
 // Create a baseMap to hold the base and add to map.
 let baseMaps = {
