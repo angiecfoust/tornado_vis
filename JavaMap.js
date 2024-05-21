@@ -3,7 +3,7 @@
 // NEED TO CHANGE THIS SECTION TO FIT OUR NEW DATA ////////////
 
 // initialize url
-const url = 'https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/tornado_data_geojson';
+const url = 'https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/static/final_data.geojson';
 
 let tornadoAlley =
   "https://raw.githubusercontent.com/angiecfoust/tornado_vis/main/tornadoAlley.geojson";
@@ -109,7 +109,7 @@ d3.json(url).then(function (data) {
 });
 
 ///////////////////////////////////////////////////////
-
+/*
 d3.json(url).then(function (data) {
 
     // create a loop to filter by five year increments (NEEDS MORE WORK!!!)
@@ -159,7 +159,7 @@ d3.json(url).then(function (data) {
         }
     };
 });
-
+*/
 //add the tornado alley polygon
 d3.json(tornadoAlley).then((geodata) => {
     L.geoJson(geodata, {
