@@ -17,6 +17,13 @@ function createMap(tornado) {
             attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
         });
 
+
+        // initializing layer group variables to hold the polylines
+        let EF1 = L.layerGroup();
+        let EF2 = L.layerGroup();
+        let EF3 = L.layerGroup();
+        let EF4 = L.layerGroup();
+        let EF5 = L.layerGroup();
        
         // Create the base layer
         let baseMaps = {
@@ -26,7 +33,12 @@ function createMap(tornado) {
 
         // Create the overlay layer
         let overlayMaps = {
-            "Tornadoes": tornado
+            "Tornadoes": tornado,
+            'EF1': EF1,
+            'EF2': EF2,
+            'EF3': EF3,
+            'EF4': EF4,
+            'EF5': EF5
         };
 
         // Create the map
@@ -39,78 +51,66 @@ function createMap(tornado) {
         // Create a layer control
         L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 
-        // make a legend
-        //set colors for legend labels (match colors to marker colors)
-        function getColor(TOR_WIDTH) {
-            return TOR_WIDTH < 201 ? "cyan" :
-                TOR_WIDTH < 501 ? "blue" :
-                    TOR_WIDTH < 1001 ? "lime" :
-                        TOR_WIDTH < 2001 ? "yellow" :
-                            TOR_WIDTH < 3001 ? "orange" :
-                                "red";
-        };
 
-        // Create a legend 
-        let legend = L.control({
-            position: "bottomright"
-        });
+////////////////////// LEGEND NEEDS WORK /////////////////////////////////////////////////////
 
-        // When the layer control is added, insert a div with the class of "legend".
-        legend.onAdd = function () {
-            let div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 201, 501, 1001, 2001, 3001],
-                labels = ['Tornado Width (ft)']
+// set up the legend 
+var legend = L.control({ position: 'bottomright' });
+legend.onAdd = function () {
+    var div = L.DomUtil.create('div', 'info legend')
+    var limits = ['EF1', 'EF2', 'EF3', 'EF4', 'EF5'];
+    var colors = ['rgb(230,146,6)','rgb(253,127,4)','rgb(255,101,0)', 'rgb(249,0,1)', 'rgb(136,0,16)'];
+    var labels = [];
 
-            // loop through our density intervals and generate a label with a colored square for each interval
-            for (let i = 0; i < grades.length; i++) {
-                div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-            }
-            div.innerHTML += '<ul>' + labels.join('') + '</ul>'
-            return div;
-        };
+    // Add min & max
+    div.innerHTML = '<h2>EF rating</h2>' + '<div class="labels"><div class="min">' + limits[0] + '</div> \
+			<div class="max">' + limits[limits.length - 1] + '</div></div>'
 
-        // Add legend to map
-        legend.addTo(myMap);
-
-
+    limits.forEach(function (limit, index) {
+        labels.push('<li style="background-color: ' + colors[index] + '"></li>')
     })
+
+    div.innerHTML += '<ul>' + labels.join('') + '</ul>'
+    return div;
 };
 
+legend.addTo(myMap);
 
+    })};
+//////////////////////////////////////////////////////////////////////////
 function tornadoMarkers(response) {
 
     d3.json(url).then((data) => {
 
         // Function to determine marker size
-        function circleSize(TOR_F_SCALE) {
-            if (TOR_F_SCALE < 2) {
-                return TOR_F_SCALE * 0.5
-            } else if (TOR_F_SCALE < 3) {
-                return TOR_F_SCALE * 1
-            } else if (TOR_F_SCALE < 4) {
-                return TOR_F_SCALE * 1.5
-            } else if (TOR_F_SCALE < 5) {
-                return TOR_F_SCALE * 2
-            } else { return TOR_F_SCALE * 2.5 }
+        function circleSize(TOR_WIDTH) {
+            if (TOR_WIDTH < 201) {
+                return TOR_WIDTH * 0.5
+            } else if (TOR_WIDTH < 501) {
+                return TOR_WIDTH * 1
+            } else if (TOR_WIDTH < 1001) {
+                return TOR_WIDTH * 1.5
+            } else if (TOR_WIDTH < 2001) {
+                return TOR_WIDTH * 2
+            } else if (TOR_WIDTH < 3001) {
+                return TOR_WIDTH * 2.5
+            } else { return TOR_WIDTH * 2.9 }
         };
 
         // Function to determine marker color
-        function circleColor(TOR_WIDTH) {
-            if (TOR_WIDTH < 201) {
-                return "cyan"
-            } else if (TOR_WIDTH < 501) {
-                return "blue"
-            } else if (TOR_WIDTH < 1001) {
-                return "lime"
-            } else if (TOR_WIDTH < 2001) {
-                return "yellow"
-            } else if (TOR_WIDTH < 3001) {
-                return "orange"
-            } else { return "red" }
-        };
+        function circleColor(TOR_F_SCALE) {
+            if (TOR_F_SCALE == 1) {
+                return 'rgb(230,146,6)'
+            } else if (TOR_F_SCALE == 2) {
+                return 'rgb(253,127,4)'
+            } else if (TOR_F_SCALE == 3) {
+                return 'rgb(255,101,0)'
+            } else if (TOR_F_SCALE == 4) {
+                return 'rgb(249,0,1)'
+            } else { return 'rgb(136,0,16)'}
 
+        };
+/////////////////////////////////////////////////////////////////////////////
 
         // Bind a popup to the marker that will display on being clicked. This will be rendered as HTML.
         function onEachFeature(features, layer) {
@@ -129,8 +129,8 @@ function tornadoMarkers(response) {
             return L.circleMarker(coords, {
                 radius: circleSize(geoJsonPoint.properties.TOR_F_SCALE),
                 weight: 1,
-                color: 'gray',
-                fillColor: circleColor(geoJsonPoint.properties.TOR_WIDTH),
+                color: '',
+                fillColor: circleColor(geoJsonPoint.properties.TOR_F_SCALE),
                 fillOpacity: 0.9
             });
         };
@@ -140,6 +140,30 @@ function tornadoMarkers(response) {
             pointToLayer: createMarker,
             onEachFeature: onEachFeature
         });
+
+///////////////// FIX EF SCALE FILTER /////////////////////////////
+
+// creating EF scale filter
+        // adding markers to layer groups
+        for (let i = 0; i < tornado_markers.length; i++) {
+
+        if (circleColor == 'rgb(230,146,6)'){
+            tornado_markers[i].addTo(EF1)
+        }
+        else if (circleColor == 'rgb(253,127,4)'){
+            tornado_markers[i].addTo(EF2)
+        }
+        else if (circleColor == 'rgb(255,101,0)'){
+            tornado_markers[i].addTo(EF3)
+        }
+        else if (circleColor == 'rgb(249,0,1)'){
+            tornado_markers[i].addTo(EF4)
+        }
+        else if (circleColor == 'rgb(136,0,16)'){
+            tornado_markers[i].addTo(EF5)
+        };
+
+    };
 
         // Call functions to create the map and legend
         createMap(tornado_markers);
