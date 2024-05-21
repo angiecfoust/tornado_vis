@@ -145,22 +145,22 @@ function tornadoMarkers(response) {
 
 // creating EF scale filter
         // adding markers to layer groups
-        for (let i = 0; i < tornado_markers.length; i++) {
+        for (let i = 0; i < tornadoMarkers.length; i++) {
 
         if (circleColor == 'rgb(230,146,6)'){
-            tornado_markers[i].addTo(EF1)
+            response[i].addTo(EF1)
         }
         else if (circleColor == 'rgb(253,127,4)'){
-            tornado_markers[i].addTo(EF2)
+            response[i].addTo(EF2)
         }
         else if (circleColor == 'rgb(255,101,0)'){
-            tornado_markers[i].addTo(EF3)
+            response[i].addTo(EF3)
         }
         else if (circleColor == 'rgb(249,0,1)'){
-            tornado_markers[i].addTo(EF4)
+            response[i].addTo(EF4)
         }
         else if (circleColor == 'rgb(136,0,16)'){
-            tornado_markers[i].addTo(EF5)
+            response[i].addTo(EF5)
         };
 
     };
