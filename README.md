@@ -40,7 +40,7 @@ Contains all the javascript files the team used to create their visualizations a
 - *ADD JS FILE/S AND LINK/S WHEN DONE*
 - tornadoAlley.geojson
 	- The geojson file used in the *(MAP)*.js code to create the polygon shape representing tornado alley
-- merged_tornado_data.ipynb + final_data.geojson *(MAY NEED UPDATED LATER)*
+- merged_tornado_data.geojson + final_data.geojson *(MAY NEED UPDATED LATER)*
 	- The main data source (converted from CSVs) used throughout all the visualizations 
 
 ### HTML files
