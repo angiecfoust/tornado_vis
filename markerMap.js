@@ -18,12 +18,13 @@ function createMap(tornado) {
         });
 
 
-        // initializing layer group variables to hold the polylines
+        // initializing layer group variables to hold the markers + slider
         let EF1 = L.layerGroup();
         let EF2 = L.layerGroup();
         let EF3 = L.layerGroup();
         let EF4 = L.layerGroup();
         let EF5 = L.layerGroup();
+        let slider = L.layerGroup();
        
         // Create the base layer
         let baseMaps = {
@@ -51,29 +52,47 @@ function createMap(tornado) {
         // Create a layer control
         L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 
+        // create layer control for slider
+        L.control.sliderControl({position: "topright", layer: slider}).addTo(myMap);
 
-////////////////////// LEGEND NEEDS WORK /////////////////////////////////////////////////////
+        // initialize the slider
+      //  sliderControl.startSlider();
 
-// set up the legend 
-var legend = L.control({ position: 'bottomright' });
+
+/////////////////////////////////////////////////////////////////////////////
+
+function getColor(TOR_F_SCALE) {
+    return TOR_F_SCALE == 1 ? 'rgb(230,146,6)' :
+        TOR_F_SCALE == 2 ? 'rgb(253,127,4)' :
+            TOR_F_SCALE == 3 ? 'rgb(255,101,0)' :
+                TOR_F_SCALE == 4 ? 'rgb(249,0,1)' :
+                    TOR_F_SCALE == 5 ?'rgb(136,0,16)':
+                        'rgb(136,0,16)'
+};
+
+// Create a legend 
+let legend = L.control({
+    position: "bottomright"
+});
+
+// When the layer control is added, insert a div with the class of "legend".
 legend.onAdd = function () {
-    var div = L.DomUtil.create('div', 'info legend')
-    var limits = ['EF1', 'EF2', 'EF3', 'EF4', 'EF5'];
-    var colors = ['rgb(230,146,6)','rgb(253,127,4)','rgb(255,101,0)', 'rgb(249,0,1)', 'rgb(136,0,16)'];
-    var labels = [];
+    let div = L.DomUtil.create('div', 'info legend'),
+        grades = [1, 2, 3, 4, 5],
+        labels = ['EF SCALE']
 
-    // Add min & max
-    div.innerHTML = '<h2>EF rating</h2>' + '<div class="labels"><div class="min">' + limits[0] + '</div> \
-			<div class="max">' + limits[limits.length - 1] + '</div></div>'
-
-    limits.forEach(function (limit, index) {
-        labels.push('<li style="background-color: ' + colors[index] + '"></li>')
-    })
-
-    div.innerHTML += '<ul>' + labels.join('') + '</ul>'
+        
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (let i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i]) + '"></i> ' +
+            grades[i]  + '<br>';
+    }
+    div.innerHTML += '<h3>' + labels.join('') + '</h3>'
     return div;
 };
 
+// Add legend to map
 legend.addTo(myMap);
 
     })};
@@ -141,6 +160,7 @@ function tornadoMarkers(response) {
             onEachFeature: onEachFeature
         });
 
+        
 ///////////////// FIX EF SCALE FILTER /////////////////////////////
 
 // creating EF scale filter
@@ -167,6 +187,9 @@ function tornadoMarkers(response) {
 
         // Call functions to create the map and legend
         createMap(tornado_markers);
+
+        // initialize the slider
+        sliderControl.startSlider();
     });
 };
 
