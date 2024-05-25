@@ -48,10 +48,13 @@ d3.json(tornadoAlley).then((geodata) => {
   layerControl.addOverlay(alley, "Tornado Alley");
 });
 
+
+
 // Add the layer control
 let layerControl = L.control
   .layers(baseMaps, overlayMaps, { collapsed: false })
   .addTo(myMap);
+
 
 //  Add Heat Points to the map
 d3.json(url).then(function (response) {
@@ -75,5 +78,14 @@ d3.json(url).then(function (response) {
   }).addTo(myMap);
 });
 
+// add slider layer
+let sliderControl = L.control.sliderControl({position: "topright", layer: base, follow: 1});
+
+// add slider to map
+map.addControl(sliderControl);
+
+// initialize slider
+sliderControl.startSlider();
+$('#slider-timestamp').html(options.markers[ui.value].feature.properties.year.substr(0,4));
 
 // features > properties > year
